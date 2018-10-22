@@ -34,7 +34,7 @@ import (
 	//"github.com/gin-gonic/gin"
 	//	_ "github.com/heroku/x/hmetrics/onload"
 	"github.com/marni/goigc"
-  "bitbucket.com/vanjao/parag"
+  "github.com/vanjao/parag"
 )
 
 func main() {
