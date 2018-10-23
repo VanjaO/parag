@@ -24,17 +24,9 @@ http://skypolaris.org/wp-content/uploads/IGS%20Files/Madrid%20to%20Jerez.igc
 package main
 
 import (
-	"fmt"
-	"net/http"
-  "strconv"
-	"strings"
-	"encoding/json"
-	"regexp"
-	"time"
 	//"github.com/gin-gonic/gin"
 	//	_ "github.com/heroku/x/hmetrics/onload"
-	"github.com/marni/goigc"
-  "github.com/vanjao/parag"
+	"github.com/vanjao/parag"
 )
 
 func main() {
@@ -48,7 +40,7 @@ func main() {
 		}
 	*/
 
-	GlobalDB.Init()
+GlobalDB.Init()
 
 	/* Initiate with dummies to test:
 	   s1 := RegTrack{TrID: "track1", TrURL: "/igcinfo/api/igc/track1", Track: Track{HDate: "2016-10-05", Pilot: "Siv Toppers", Glider: "Mypmyp", GliderId: "AIKK-3", TrackLength: 764}}
@@ -61,10 +53,11 @@ func main() {
 
 	   fmt.Println("GlobalDB content: ", GlobalDB)
 	*/
+
 	//port := os.Getenv("PORT")
-	http.HandleFunc("/igcinfo/api", HandlerApiInfo)
-	http.HandleFunc("/igcinfo/api/igc", HandlerRegTrack)
-	http.HandleFunc("/igcinfo/api/igc/", HandlerRegSingleTrack)
+http.HandleFunc("/igcinfo/api", HandlerApiInfo)
+http.HandleFunc("/igcinfo/api/igc", HandlerRegTrack)
+http.HandleFunc("/igcinfo/api/igc/", HandlerRegSingleTrack)
 	//http.ListenAndServe(":"+port, nil)
-	http.ListenAndServe("127.0.0.1:8809", nil)
+http.ListenAndServe("127.0.0.1:8809", nil)
 }
