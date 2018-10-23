@@ -26,12 +26,13 @@ package main
 import (
 	//"github.com/gin-gonic/gin"
 	//	_ "github.com/heroku/x/hmetrics/onload"
+	"net/http"
 	"github.com/vanjao/parag"
 )
 
 func main() {
 
-	GlobalDB = &TrackDB{}
+	parag.GlobalDB = &TrackDB{}
 
 	/*
 		port := os.Getenv("PORT")
@@ -40,7 +41,7 @@ func main() {
 		}
 	*/
 
-GlobalDB.Init()
+parag.GlobalDB.Init()
 
 	/* Initiate with dummies to test:
 	   s1 := RegTrack{TrID: "track1", TrURL: "/igcinfo/api/igc/track1", Track: Track{HDate: "2016-10-05", Pilot: "Siv Toppers", Glider: "Mypmyp", GliderId: "AIKK-3", TrackLength: 764}}
@@ -55,9 +56,9 @@ GlobalDB.Init()
 	*/
 
 	//port := os.Getenv("PORT")
-http.HandleFunc("/igcinfo/api", HandlerApiInfo)
-http.HandleFunc("/igcinfo/api/igc", HandlerRegTrack)
-http.HandleFunc("/igcinfo/api/igc/", HandlerRegSingleTrack)
+http.HandleFunc("/igcinfo/api", parag.HandlerApiInfo)
+http.HandleFunc("/igcinfo/api/igc", parag.HandlerRegTrack)
+http.HandleFunc("/igcinfo/api/igc/", parag.HandlerRegSingleTrack)
 	//http.ListenAndServe(":"+port, nil)
 http.ListenAndServe("127.0.0.1:8809", nil)
 }
