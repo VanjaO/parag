@@ -1,3 +1,3 @@
-module parag v0.1.0
+module parag
 
 require github.com/marni/goigc v0.1.0
