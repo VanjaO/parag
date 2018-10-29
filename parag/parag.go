@@ -65,7 +65,7 @@ type TrackStorage interface {
 	Init()
 	Add(reg RegTrack) error
 	Count() int
-	FindRegTrack(reg RegTrack) (RegTrack, bool)
+	GetRegTrack(reg RegTrack) (RegTrack, bool)
 	GetAll() []RegTrack
 	TransformIGC(u string) (RegTrack, bool)
 	ApiFields(ap string) bool
@@ -160,7 +160,7 @@ an empty one
 Treat the ERROR  - do not use err (no formatting directives).
 Should include an error as return value instead of bool!
 */
-		fmt.Errorf("Problem reading the received track file. Are you sure it is an .igc?", err)
+		fmt.Errorf("Problem reading the received track file. Are you sure it is an .igc? %s", err)
 		return RegTrack{}, false
 	}
 	var dist float64
@@ -207,7 +207,7 @@ match on either the url or the id of the object, a
 complete RegTrack object with flight records is returned.
 If RegTrack object is not complete - false, else true.
 */
-func (db *TrackDB) FindRegTrack(reg RegTrack) (RegTrack, bool) {
+func (db *TrackDB) GetRegTrack(reg RegTrack) (RegTrack, bool) {
   // TODO better handling of errors - may be restructure return values
   // Maybe make a function isInDB() to check if a reg is present and
 	// make error handling based on this (as this checking is done several times)
@@ -289,6 +289,8 @@ func displayAllRegTracks(w http.ResponseWriter, db TrackStorage) {
 
 // DISPLAY api/igc ---> STRING array of all IDs
 func displayAllRegTracksID(w http.ResponseWriter, db TrackStorage) {
+  http.StatusText(200)
+	// TODO this line is not validating for Status
 	if db.Count() == 0 {
 		json.NewEncoder(w).Encode([]string{})
 	} else {
@@ -298,6 +300,7 @@ func displayAllRegTracksID(w http.ResponseWriter, db TrackStorage) {
 			add = append(add, strconv.Itoa(reg.TrID))
 		}
 		json.NewEncoder(w).Encode(add)
+
 	}
 }
 
@@ -306,7 +309,7 @@ func displayAllRegTracksID(w http.ResponseWriter, db TrackStorage) {
 func displayOneRegTrack(w http.ResponseWriter, db TrackStorage, reg RegTrack, field string) {
 	//http.Header.Add(w.Header(), "date", time.RFC3339)
 	// Find the reg in db with missing either RegTrack.Id or u (string)
-	trc, ok := db.FindRegTrack(reg)
+	trc, ok := db.GetRegTrack(reg)
 	// If the reg cannot be confirmed as belonging to the database
 	// it returns !ok (false)
 	if !ok {
@@ -316,7 +319,7 @@ func displayOneRegTrack(w http.ResponseWriter, db TrackStorage, reg RegTrack, fi
 	switch {
 	case field == "":
 		http.Header.Add(w.Header(), "Content-Type", "application/json")
-		json.NewEncoder(w).Encode(trc)
+		json.NewEncoder(w).Encode(trc.Track)
 	case field == "pilot":
 		//http.Header.Add(w.Header(), "Content-Type", "text/plain")
 		json.NewEncoder(w).Encode(trc.Pilot)
@@ -421,15 +424,13 @@ c.Error(err)
 		// GET for api/igc
 		// Returns/display an array of all tracks ids as JSON:
 	case "GET":
+		//http.StatusText(200)
 		//http.Header.Add(w.Header(), "content-type", "application/json")
 		// Can also use:
 		// w.Header().Add("content-type", "application/json")
-
+    // TODO this line is not validating for Status
 		// ID as string array [] = empty
 		displayAllRegTracksID(w, GlobalDB)
-
-		// Track-objects as an array {} when empty
-		//displayAllRegTracks(w, GlobalDB)
 
 	default:
 		http.Error(w, "This is not an option in this API.", http.StatusBadRequest)

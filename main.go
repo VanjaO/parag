@@ -27,12 +27,21 @@ import (
 	//"github.com/gin-gonic/gin"
 	//	_ "github.com/heroku/x/hmetrics/onload"
 	"net/http"
-	"github.com/vanjao/parag"
+	"parag/parag"
+	//"github.com/vanjao/parag"
 )
+
+func HandlerRedirect (w http.ResponseWriter, r *http.Request){
+  http.Redirect (w, r, "/igcinfo/api", 302)
+}
+
+func HandlerNotFound (w http.ResponseWriter, r *http.Request){
+	http.NotFound(w, r)
+}
 
 func main() {
 
-	parag.GlobalDB = &TrackDB{}
+	parag.GlobalDB = &parag.TrackDB{}
 
 	/*
 		port := os.Getenv("PORT")
@@ -56,7 +65,9 @@ parag.GlobalDB.Init()
 	*/
 
 	//port := os.Getenv("PORT")
-http.HandleFunc("/igcinfo/api", parag.HandlerApiInfo)
+http.HandleFunc("/", HandlerNotFound)
+http.HandleFunc("/igcinfo/", HandlerRedirect)
+http.HandleFunc("/igcinfo/api/", parag.HandlerApiInfo)
 http.HandleFunc("/igcinfo/api/igc", parag.HandlerRegTrack)
 http.HandleFunc("/igcinfo/api/igc/", parag.HandlerRegSingleTrack)
 	//http.ListenAndServe(":"+port, nil)
