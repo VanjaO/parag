@@ -1,0 +1,9 @@
+language: go
+go:
+        - tip
+
+before_install:
+        - go get -v github.com/golang/lint/golint
+        - go get -v github.com/marni/goigc
+        - go get -v github.com/mongodb/mongo-go-driver
+        - go get golang.org/x/tools/cmd/cover
