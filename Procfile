@@ -1,1 +1,1 @@
-web: paragliding-falckonv
+web: parag

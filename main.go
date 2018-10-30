@@ -21,6 +21,8 @@ http://skypolaris.org/wp-content/uploads/IGS%20Files/Madrid%20to%20Jerez.igc
 
 */
 
+// +build linux,386 darwin
+// +heroku goVersion go1.11
 package main
 
 import (
@@ -29,8 +31,11 @@ import (
 	"net/http"
 	"os"
 	"log"
+	//"go/build"
 	"parag/parag"
 )
+
+//var Default build.Context = build.defaultContext()
 
 func HandlerRedirect (w http.ResponseWriter, r *http.Request){
   http.Redirect (w, r, "/igcinfo/api", 302)
@@ -44,8 +49,9 @@ func main() {
 
 		port := os.Getenv("PORT")
 		if port == "" {
-			log.Fatal("$PORT must be set")
+			port= "8809"
 		}
+
 
 parag.GlobalDB.Init()
 
@@ -67,6 +73,6 @@ http.HandleFunc("/igcinfo/", HandlerRedirect)
 http.HandleFunc("/igcinfo/api/", parag.HandlerApiInfo)
 http.HandleFunc("/igcinfo/api/igc", parag.HandlerRegTrack)
 http.HandleFunc("/igcinfo/api/igc/", parag.HandlerRegSingleTrack)
-http.ListenAndServe(":"+port, nil)
+log.Fatal(http.ListenAndServe(":"+port, nil))
 //http.ListenAndServe("127.0.0.1:8809", nil)
 }

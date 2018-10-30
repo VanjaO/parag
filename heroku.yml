@@ -1,6 +1,9 @@
-language: go
-go:
-        - tip
+build:
+  languages:
+    - go
+
+run:
+  web: parag
 
 before_install:
         - go get -v github.com/golang/lint/golint
